@@ -1,0 +1,7 @@
+Target Product: product_009948, Food, 57.13, 63, 70
+Top-5 most similar products:
+1. product_004709, Beauty, 58.98, 63, 72, Dist: 2.7244
+2. product_008203, Books, 54.88, 60, 73, Dist: 4.8023
+3. product_004795, Food, 51.66, 67, 71, Dist: 6.8499
+4. product_004240, Clothing, 59.23, 69, 76, Dist: 8.7413
+5. product_003259, Clothing, 66.22, 64, 68, Dist: 9.3610

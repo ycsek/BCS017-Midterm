@@ -53,7 +53,7 @@ public class EuclideanRecommender {
         others.sort(Comparator.comparingDouble(p -> euclidean(target, p)));
         // 4. Output top 5 recommendations
         try (PrintWriter pw = new PrintWriter(new FileWriter(outputPath))) {
-            pw.println("Target: " + target.id + ", " + target.category + ", " + target.price + ", " + target.quantity + ", " + target.rating);
+            pw.println("Target product: " + target.id + ", " + target.category + ", " + target.price + ", " + target.quantity + ", " + target.rating);
             pw.println("Top-5 most similar products:");
             for (int i = 0; i < 5; i++) {
                 Product rec = others.get(i);
