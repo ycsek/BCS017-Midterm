@@ -13,55 +13,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-
-/**
- * Driver class for the Sales Data Analysis MapReduce application.
- *
- * <p>This driver orchestrates two sequential MapReduce jobs:</p>
- * <ol>
- *   <li><b>Task 1 — Highest Rated Product per Category:</b>
- *       Finds the product(s) with the maximum rating in each category.</li>
- *   <li><b>Task 2 — Distribution by Price Range &amp; Quantity Bracket:</b>
- *       Counts products falling into each (price_range, quantity_bracket) cell.</li>
- * </ol>
- *
- * <h3>Usage:</h3>
- * <pre>
- *   hadoop jar sales-analysis.jar com.example.salesanalysis.SalesAnalysisDriver \
- *       &lt;input_path&gt; &lt;output_task1&gt; &lt;output_task2&gt;
- * </pre>
- *
- * <h3>Local Mode:</h3>
- * <p>To run in local mode (standalone, no HDFS), set the following in
- * {@code core-site.xml} or pass as command-line arguments:</p>
- * <pre>
- *   -Dfs.defaultFS=file:///
- *   -Dmapreduce.framework.name=local
- * </pre>
- *
- * <h3>Cluster Mode:</h3>
- * <p>Ensure HDFS is running and the input file is uploaded:</p>
- * <pre>
- *   hdfs dfs -put sales_data.txt /user/hadoop/input/
- *   hadoop jar sales-analysis.jar com.example.salesanalysis.SalesAnalysisDriver \
- *       /user/hadoop/input/sales_data.txt \
- *       /user/hadoop/output/task1 \
- *       /user/hadoop/output/task2
- * </pre>
- *
- * @author BCS017-Midterm
- */
 public class SalesAnalysisDriver extends Configured implements Tool {
-
-    /**
-     * Configures and runs both MapReduce jobs sequentially.
-     *
-     * @param args command-line arguments:
-     *             args[0] = input path (sales_data.txt)
-     *             args[1] = output path for Task 1 (highest rated)
-     *             args[2] = output path for Task 2 (distribution)
-     * @return 0 on success, 1 on failure
-     */
     @Override
     public int run(String[] args) throws Exception {
 
@@ -79,14 +31,10 @@ public class SalesAnalysisDriver extends Configured implements Tool {
 
         Configuration conf = getConf();
 
-        // ================================================================
         // JOB 1: Most Highly-Rated Product per Category
-        // ================================================================
-        System.out.println("========================================");
         System.out.println("Starting Job 1: Highest Rated per Category");
         System.out.println("  Input:  " + inputPath);
         System.out.println("  Output: " + outputTask1);
-        System.out.println("========================================");
 
         Job job1 = Job.getInstance(conf, "Sales Analysis - Task 1: Highest Rated per Category");
         job1.setJarByClass(SalesAnalysisDriver.class);
@@ -172,6 +120,22 @@ public class SalesAnalysisDriver extends Configured implements Tool {
         System.out.println("All jobs completed successfully!");
         System.out.println("  Task 1 output: " + outputTask1);
         System.out.println("  Task 2 output: " + outputTask2);
+        System.out.println("========================================");
+
+        // ================================================================
+        // TASK 3: Euclidean Recommendation (Standalone, Non-MapReduce)
+        // ================================================================
+        System.out.println("Starting Task 3: Euclidean Recommendation (Random Sample)");
+        String recommendOutput = "output/task3/recommend.txt";
+        try {
+            com.example.salesanalysis.EuclideanRecommender.main(new String[]{});
+            System.out.println("  Task 3 output: " + recommendOutput);
+        } catch (Exception e) {
+            System.err.println("ERROR: Task 3 (Euclidean Recommendation) failed!");
+            e.printStackTrace();
+        }
+        System.out.println("========================================");
+        System.out.println("All jobs (including recommendation) completed!");
         System.out.println("========================================");
 
         return 0;
